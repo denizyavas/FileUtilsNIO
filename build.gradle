@@ -12,12 +12,26 @@ repositories {
     mavenCentral()
 }
 
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-release-remote" }
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath 'com.github.townsfolk:gradle-release:1.2'
+    }
+}
+
 //======================================================================
 // PLUGINS
 //======================================================================
 
 apply plugin: "groovy"
 apply plugin: 'idea'
+apply plugin: 'release'
 
 //======================================================================
 // TASK CONFIGURATIONS
