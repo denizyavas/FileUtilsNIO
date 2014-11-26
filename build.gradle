@@ -1,0 +1,51 @@
+//======================================================================
+// PROJECT
+//======================================================================
+
+group = 'net.deniz.nio.fileutils'
+
+//======================================================================
+// REPOSITORIES
+//======================================================================
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+//======================================================================
+// PLUGINS
+//======================================================================
+
+apply plugin: "groovy"
+apply plugin: 'idea'
+
+//======================================================================
+// TASK CONFIGURATIONS
+//======================================================================
+
+idea {
+    project {
+        jdkName "1.7"
+        languageLevel "1.7"
+    }
+    module {
+        inheritOutputDirs = false
+        outputDir = compileGroovy.destinationDir
+        testOutputDir = compileTestGroovy.destinationDir
+
+    }
+}
+
+//======================================================================
+// DEPENDENCIES
+//======================================================================
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.6'
+
+    compile "org.slf4j:slf4j-api:1.7.5"
+
+    compile "joda-time:joda-time:2.3"
+    testCompile "junit:junit:4.11"
+    testCompile "commons-lang:commons-lang:2.4"
+}
