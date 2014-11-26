@@ -58,16 +58,16 @@ class FileUtils {
 
         if (!Files.exists(dir) && !failIfNoFile) {
             log.debug "File/folder in path [${dir}] is not found avoiding exception since failIFNoFile is false"
-            result.message= "File/folder in path [${dir}] is not found"
+            result.message = "File/folder in path [${dir}] is not found"
             result
         } else {
             try {
                 Files.walkFileTree dir, visitor
                 log.debug "File/folder in path [${dir}] is deleted"
-                result.message= "File/folder in path [${dir}] is deleted"
+                result.message = "File/folder in path [${dir}] is deleted"
             } catch (Exception e) {
                 log.debug "Unable to walk in directory [${dir}] due to errors", e
-                result.message= "Unable to walk in directory [${dir}] due to errors"
+                result.message = "Unable to walk in directory [${dir}] due to errors"
             }
             result
         }
@@ -78,12 +78,16 @@ class FileUtils {
             if (!override && Files.exists(path)) {
                 log.debug "File already exists in path [${path}] and override is not allowed"
                 false
+            } else {
+                FileCommonUtils.createParent path
+                Files.write path, content
+                log.debug "File is written in path [${path}]"
+                true
             }
-            FileCommonUtils.createParent path
-            Files.write path, content
-            log.debug "File is written in path [${path}]"
-            true
-        } catch (IOException e) {
+        }
+        catch (
+                IOException e
+                ) {
             log.debug "Content cannot be written to path [${path}]", e
             false
         }
@@ -105,4 +109,5 @@ class FileUtils {
     static void copy(Path sourcePath, Path targetPath) throws IOException {
         Files.walkFileTree sourcePath, new CopyFileVisitor(targetPath)
     }
+
 }

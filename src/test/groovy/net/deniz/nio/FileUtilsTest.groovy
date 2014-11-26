@@ -12,6 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.security.Permission
+import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 import static org.junit.Assert.*
@@ -55,7 +56,7 @@ class FileUtilsTest {
 
     @Test
     void writeFile_unableToWrite_alreadyExists() {
-        assertTrue(FileUtils.writeFile(filePath1, "test".bytes))
+        assertTrue(FileUtils.writeFile(filePath1, "test".bytes, true))
         assertFalse(FileUtils.writeFile(filePath1, "test".bytes, false))
     }
 
@@ -77,7 +78,7 @@ class FileUtilsTest {
         assertFalse(Files.exists(basePath))
         assertTrue(result.filesTracked.contains(filePath1))
         assertTrue(result.filesTracked.contains(filePath2))
-        assertNotEquals(result.filesFailed.size(), 0)
+        assertEquals(result.filesFailed.size(), 0)
     }
 
     @Test
@@ -243,19 +244,6 @@ class FileUtilsTest {
         validateZip(zipPath, Arrays.asList("d/", "d/e/", "d/e/file5.txt", "d/file4.txt", "file1.txt", "file2.txt"))
     }
 
-    @Test(expected = InstantiationException.class)
-    void utilityClassCheck() throws Throwable {
-        try {
-            Constructor c = Class.forName(FileUtils.class.name).declaredConstructors
-            c.accessible = true
-            c.newInstance()
-        } catch (InvocationTargetException e) {
-            throw e.targetException
-            // no need to expect reflection errors
-            // we are interested in our own exceptions
-        }
-    }
-
     @Test
     void copyFolderToFolder() throws IOException {
         FileUtils.writeFile(filePath7, "test".bytes)
@@ -301,13 +289,15 @@ class FileUtilsTest {
         })
     }
 
+
     static void validateZip(Path zipPath, List<String> content) throws IOException {
+        def zis = new ZipInputStream(new ByteArrayInputStream(Files.readAllBytes(zipPath)))
+
         def entry
         def zipContent = []
-        while (!(entry = new ZipInputStream(new ByteArrayInputStream(Files.readAllBytes(zipPath))).nextEntry())) {
+        while ((entry = zis.nextEntry) != null) {
             zipContent << entry.name
         }
-
         assertEquals(content.size(), zipContent.size())
         content.each {
             assertTrue zipContent.contains(it)

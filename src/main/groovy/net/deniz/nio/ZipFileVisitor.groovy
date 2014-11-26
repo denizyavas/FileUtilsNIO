@@ -26,7 +26,7 @@ class ZipFileVisitor extends SimpleFileVisitor<Path> {
         this.fileOrFolderToZip = fileOrFolderToZip
 
         // check if file exists
-        def env = ["create": !zipFilePath.toFile().exists().toString()]
+        def env = ["create": Boolean.toString(!Files.exists(zipFilePath))]
 
         // use a Zip filesystem URI
         URI fileUri = zipFilePath.toUri()

@@ -32,7 +32,7 @@ class CopyFileVisitor extends SimpleFileVisitor<Path> {
     @Override
     FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
         try {
-            if (sourcePath) {
+            if (!sourcePath) {
                 sourcePath = file.parent
             }
 
