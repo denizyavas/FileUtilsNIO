@@ -1,8 +1,6 @@
 FileUtilsNIO
 ============
 
-# gradle-git
-
 A set of utility methods for Java NIO
 
 - Delete files/folders
